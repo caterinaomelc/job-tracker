@@ -22,11 +22,10 @@ public class JwtUtils {
     @Value("${jwt.expiration}")
     private long expiration;
 
-    String generateJwtToken(Authentication authentication) {
-        User user = (User) authentication.getPrincipal();
+    public String generateJwtToken(String username) {
 
         return Jwts.builder()
-                .subject(user.getUsername())
+                .subject(username)
                 .issuedAt(new Date())
                 .expiration(new Date(new Date().getTime() + expiration))
                 .signWith(getSigningKey())
