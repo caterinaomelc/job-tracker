@@ -1,4 +1,4 @@
-package config;
+package com.jobtracker.application.config;
 
 import com.jobtracker.application.security.JwtAuthFilter;
 import lombok.RequiredArgsConstructor;
