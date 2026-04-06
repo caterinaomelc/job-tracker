@@ -55,6 +55,9 @@ public class User implements UserDetails {
         return Collections.singleton(new SimpleGrantedAuthority("ROLE_" + role));
     }
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Company> companies;
+
     @Override
     public boolean isAccountNonExpired() {
         return true;
