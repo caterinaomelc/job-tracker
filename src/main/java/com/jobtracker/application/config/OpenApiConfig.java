@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -23,6 +24,7 @@ public class OpenApiConfig {
                 .info(new Info()
                         .title("Job Tracker Application")
                         .version("1.0")
-                        .description("Job Tracker Application"));
+                        .description("Job Tracker Application"))
+                .addSecurityItem(new SecurityRequirement().addList("bearerAuth"));
     }
 }

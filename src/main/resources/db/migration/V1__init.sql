@@ -7,7 +7,7 @@ CREATE TABLE users (
                        is_verified BOOLEAN NOT NULL DEFAULT FALSE,
                        created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                        role varchar(50) NOT NULL
-),
+);
 
 CREATE TABLE companies (
     id BIGSERIAL PRIMARY KEY ,
