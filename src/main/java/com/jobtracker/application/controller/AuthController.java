@@ -3,7 +3,6 @@ package com.jobtracker.application.controller;
 import com.jobtracker.application.model.request.LoginRequest;
 import com.jobtracker.application.model.request.RegisterRequest;
 import com.jobtracker.application.service.AuthService;
-import com.jobtracker.application.service.impl.AuthServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
