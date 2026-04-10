@@ -22,7 +22,7 @@ public class Application {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "company_id", nullable = false)
+    @JoinColumn(name = "id", nullable = false)
     private Company company;
 
     @Column(nullable = false)
