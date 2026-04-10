@@ -22,7 +22,7 @@ public class Application {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "id", nullable = false)
+    @JoinColumn(name = "company_id", nullable = false)
     private Company company;
 
     @Column(nullable = false)
@@ -43,6 +43,11 @@ public class Application {
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
+
+    @PrePersist
+    public void prePersist() {
+        createdAt = LocalDateTime.now();
+    }
 
 
 }

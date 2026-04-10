@@ -10,6 +10,6 @@ public record ApplicationRequest
          BigDecimal salary,
          String notes,
          LocalDate appliedDate,
-         @NotBlank String status
+         String status
         ){
 }

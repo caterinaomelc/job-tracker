@@ -33,7 +33,7 @@ public class ApplicationController {
 
     @PutMapping("${end.points.id}")
     public ResponseEntity<ApplicationResponse> updateApplication(@PathVariable Long companyId,
-                                                                 @PathVariable Long applicationId,
+                                                                 @PathVariable("id") Long applicationId,
                                                                  @RequestBody ApplicationRequest applicationRequest) {
         return ResponseEntity.ok(applicationService.updateApplication(applicationRequest, companyId, applicationId));
     }
@@ -41,7 +41,7 @@ public class ApplicationController {
     @DeleteMapping("${end.points.id}")
     public ResponseEntity<Void> deleteApplication(
             @PathVariable Long companyId,
-            @PathVariable Long applicationId) {
+            @PathVariable("id") Long applicationId) {
         applicationService.deleteApplication(companyId, applicationId);
         return ResponseEntity.noContent().build();
 

@@ -34,3 +34,4 @@ build/
 
 
 .env
+src/main/java/com/jobtracker/application/mapper/test.java
