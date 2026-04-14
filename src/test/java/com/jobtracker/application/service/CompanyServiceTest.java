@@ -117,7 +117,7 @@ public class CompanyServiceTest {
         when(companyRepository.findById(1L)).thenReturn(Optional.of(testCompany));
         when(userRepository.findByUsername("testUser")).thenReturn(Optional.of(testUser));
 
-        companyService.deleteCompany(1L); // просто вызываешь
+        companyService.deleteCompany(1L);
 
         verify(companyRepository, times(1)).delete(testCompany);
 
