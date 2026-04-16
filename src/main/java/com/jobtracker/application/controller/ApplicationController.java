@@ -14,31 +14,30 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("${end.points.companies.id.applications}")
 public class ApplicationController {
 
     private final ApplicationService applicationService;
 
-    @PostMapping
+    @PostMapping("${end.points.companies.id.applications}")
     public ResponseEntity<ApplicationResponse> addApplication(@PathVariable Long companyId,
                                                               @RequestBody ApplicationRequest applicationRequest) {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(applicationService.addApplication(applicationRequest, companyId));
     }
 
-    @GetMapping
+    @GetMapping("${end.points.applications}")
     public ResponseEntity<List<ApplicationResponse>> getApplications() {
         return ResponseEntity.ok(applicationService.getAllApplications());
     }
 
-    @PutMapping("${end.points.id}")
+    @PutMapping("${end.points.companies.id.applications.id}")
     public ResponseEntity<ApplicationResponse> updateApplication(@PathVariable Long companyId,
                                                                  @PathVariable("id") Long applicationId,
                                                                  @RequestBody ApplicationRequest applicationRequest) {
         return ResponseEntity.ok(applicationService.updateApplication(applicationRequest, companyId, applicationId));
     }
 
-    @DeleteMapping("${end.points.id}")
+    @DeleteMapping("${end.points.companies.id.applications.id}")
     public ResponseEntity<Void> deleteApplication(
             @PathVariable Long companyId,
             @PathVariable("id") Long applicationId) {
