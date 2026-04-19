@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -44,7 +45,7 @@ public class Company {
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "company", fetch = FetchType.LAZY)
-    private List<Application> applications;
+    private List<Application> applications = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)

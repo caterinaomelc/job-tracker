@@ -1,6 +1,8 @@
 package com.jobtracker.application.service.impl;
 
+import com.jobtracker.application.exception.CompanyAlreadyExists;
 import com.jobtracker.application.exception.InvalidDataException;
+import com.jobtracker.application.exception.NotFoundException;
 import com.jobtracker.application.mapper.CompanyMapper;
 import com.jobtracker.application.model.entity.Company;
 import com.jobtracker.application.model.entity.User;
@@ -29,6 +31,11 @@ public class CompanyServiceImpl implements CompanyService {
 
         Company company = companyMapper.toEntity(request);
         company.setUser(getCurrentUser());
+
+        if (companyRepository.existsByNameAndUser(company.getName(), getCurrentUser())) {
+            throw new CompanyAlreadyExists("Company already exists");
+        }
+
         companyRepository.save(company);
 
         return companyMapper.toResponse(company);
@@ -37,7 +44,7 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public CompanyResponse updateCompany(CompanyRequest request, Long id) {
         Company company = companyRepository.findById(id)
-                .orElseThrow(() -> new InvalidDataException("Company Not Found"));
+                .orElseThrow(() -> new NotFoundException("Company Not Found"));
 
 
         if (!company.getUser().getId().equals(getCurrentUser().getId())) {
@@ -54,7 +61,7 @@ public class CompanyServiceImpl implements CompanyService {
     public void deleteCompany(Long id) {
 
         Company company = companyRepository.findById(id)
-                .orElseThrow(() -> new InvalidDataException("Company Not Found"));
+                .orElseThrow(() -> new NotFoundException("Company Not Found"));
 
         if (!company.getUser().getId().equals(getCurrentUser().getId())) {
             throw new InvalidDataException("Access denied");
@@ -75,7 +82,7 @@ public class CompanyServiceImpl implements CompanyService {
 
     public CompanyResponse getCompanyById(Long id) {
         Company company = companyRepository.findById(id)
-                .orElseThrow(() -> new InvalidDataException("Company Not Found"));
+                .orElseThrow(() -> new NotFoundException("Company Not Found"));
         if (!company.getUser().getId().equals(getCurrentUser().getId())) {
             throw new InvalidDataException("Access denied");
         }
@@ -86,6 +93,6 @@ public class CompanyServiceImpl implements CompanyService {
     private User getCurrentUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return userRepository.findByUsername(auth.getName())
-                .orElseThrow(() -> new InvalidDataException("User not found"));
+                .orElseThrow(() -> new NotFoundException("User not found"));
     }
 }

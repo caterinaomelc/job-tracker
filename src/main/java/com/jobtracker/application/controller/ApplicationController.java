@@ -3,6 +3,7 @@ package com.jobtracker.application.controller;
 import com.jobtracker.application.model.request.ApplicationRequest;
 import com.jobtracker.application.model.response.ApplicationResponse;
 import com.jobtracker.application.service.ApplicationService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -20,7 +21,7 @@ public class ApplicationController {
 
     @PostMapping("${end.points.companies.id.applications}")
     public ResponseEntity<ApplicationResponse> addApplication(@PathVariable Long companyId,
-                                                              @RequestBody ApplicationRequest applicationRequest) {
+                                                              @Valid @RequestBody ApplicationRequest applicationRequest) {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(applicationService.addApplication(applicationRequest, companyId));
     }
@@ -33,7 +34,7 @@ public class ApplicationController {
     @PutMapping("${end.points.companies.id.applications.id}")
     public ResponseEntity<ApplicationResponse> updateApplication(@PathVariable Long companyId,
                                                                  @PathVariable("id") Long applicationId,
-                                                                 @RequestBody ApplicationRequest applicationRequest) {
+                                                                 @Valid @RequestBody ApplicationRequest applicationRequest) {
         return ResponseEntity.ok(applicationService.updateApplication(applicationRequest, companyId, applicationId));
     }
 

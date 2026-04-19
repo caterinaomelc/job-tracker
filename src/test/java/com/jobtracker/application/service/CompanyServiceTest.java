@@ -72,7 +72,7 @@ public class CompanyServiceTest {
         testCompanies.add(testCompany);
 
         testCompanyRequest = new CompanyRequest("test name", null, null, null, null);
-        testCompanyResponse = new CompanyResponse("test name", null, null, null, null, null);
+        testCompanyResponse = new CompanyResponse(1L, "test name", null, null, null, null, null);
 
     }
 

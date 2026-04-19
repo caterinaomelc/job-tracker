@@ -1,6 +1,7 @@
 package com.jobtracker.application.service.impl;
 
 import com.jobtracker.application.exception.InvalidDataException;
+import com.jobtracker.application.exception.NotFoundException;
 import com.jobtracker.application.mapper.ApplicationMapper;
 import com.jobtracker.application.model.entity.Application;
 import com.jobtracker.application.model.entity.Company;
@@ -32,7 +33,7 @@ public class ApplicationServiceImpl implements ApplicationService {
                                               Long companyId) {
 
         Company company = companyRepository.findById(companyId)
-                .orElseThrow(() -> new InvalidDataException("Company Not Found"));
+                .orElseThrow(() -> new NotFoundException("Company Not Found"));
 
         Application application = applicationMapper.toEntity(request);
         application.setCompany(company);
@@ -43,10 +44,10 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Override
     public ApplicationResponse updateApplication(ApplicationRequest request, Long companyId, Long applicationId) {
         companyRepository.findById(companyId)
-                .orElseThrow(() -> new InvalidDataException("Company Not Found"));
+                .orElseThrow(() -> new NotFoundException("Company Not Found"));
 
         Application application = applicationRepository.findById(applicationId)
-                .orElseThrow(() -> new InvalidDataException("Application Not Found"));
+                .orElseThrow(() -> new NotFoundException("Application Not Found"));
 
         if (!application.getCompany().getId().equals(companyId)) {
             throw new InvalidDataException("Application does not belong to this company");
@@ -61,10 +62,10 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Override
     public void deleteApplication(Long companyId,Long  applicationId) {
         companyRepository.findById(companyId)
-                .orElseThrow(() -> new InvalidDataException("Company Not Found"));
+                .orElseThrow(() -> new NotFoundException("Company Not Found"));
 
         Application application = applicationRepository.findById(applicationId)
-                .orElseThrow(() -> new InvalidDataException("Application Not Found"));
+                .orElseThrow(() -> new NotFoundException("Application Not Found"));
 
         if (!application.getCompany().getId().equals(companyId)) {
             throw new InvalidDataException("Application does not belong to this company");
@@ -87,7 +88,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     private User getCurrentUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return userRepository.findByUsername(auth.getName())
-                .orElseThrow(() -> new InvalidDataException("User not found"));
+                .orElseThrow(() -> new NotFoundException("User not found"));
     }
 
 }

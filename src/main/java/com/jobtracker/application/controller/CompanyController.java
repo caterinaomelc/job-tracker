@@ -3,6 +3,7 @@ package com.jobtracker.application.controller;
 import com.jobtracker.application.model.request.CompanyRequest;
 import com.jobtracker.application.model.response.CompanyResponse;
 import com.jobtracker.application.service.CompanyService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -20,7 +21,7 @@ public class CompanyController {
     private final CompanyService companyService;
 
     @PostMapping
-    public ResponseEntity<CompanyResponse> createCompany(@RequestBody CompanyRequest request) {
+    public ResponseEntity<CompanyResponse> createCompany(@Valid @RequestBody CompanyRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(companyService.addCompany(request));
 
     }
@@ -36,7 +37,7 @@ public class CompanyController {
     }
 
     @PutMapping("${end.points.id}")
-    public ResponseEntity<CompanyResponse> updateCompany(@RequestBody CompanyRequest request,
+    public ResponseEntity<CompanyResponse> updateCompany(@Valid @RequestBody CompanyRequest request,
                                          @PathVariable Long id) {
         return ResponseEntity.ok().body(companyService.updateCompany(request, id));
     }
