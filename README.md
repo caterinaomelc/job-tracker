@@ -14,6 +14,43 @@ Flyway, MapStruct, Docker, Swagger/OpenAPI
 - CRUD operations for companies
 - CRUD operations for job applications
 - API documentation via Swagger UI
+- Global exception handling with custom exceptions
+- Input validation with @Valid
+- Unit and integration tests (Mockito, MockMvc)
+- Database migrations with Flyway
+
+## Security
+- JWT-based stateless authentication
+- Token validation via custom JwtAuthFilter on every request
+- Invalid/expired token returns 403
+- User details loaded from database on each request
+
+
+## Database
+PostgreSQL with Flyway migrations.
+
+Tables: users, companies, applications
+
+Relationships:
+- User → many Companies
+- Company → many Applications
+
+## Architecture
+The application follows a layered architecture:
+- **Controller** - handles HTTP requests
+- **Service** - business logic
+- **Repository** - database access (Spring Data JPA)
+- **DTO** - request/response objects (mapped via MapStruct)
+
+Error handling: custom exceptions (NotFoundException, CompanyAlreadyExists)
+with GlobalExceptionHandler returning structured HTTP responses.
+
+
+## Testing
+- Unit tests for CompanyService and ApplicationService (Mockito)
+- Happy path + all exception scenarios
+- Integration tests for CompanyController and ApplicationController (MockMvc)
+- 200, 201, 204, 400, 403, 404, 409 scenarios
 
 ## How to Run 
 Requirements: Docker Desktop
