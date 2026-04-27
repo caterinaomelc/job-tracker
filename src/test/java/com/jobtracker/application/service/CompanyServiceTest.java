@@ -15,6 +15,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -79,15 +81,16 @@ public class CompanyServiceTest {
 
     @Test
     void getAllCompanies_ReturnListOfCompanies() {
-        when(companyRepository.findAllByUserId(1L))
-                .thenReturn(testCompanies);
+        Pageable pageable = Pageable.unpaged();
+        when(companyRepository.findAllByUserId(1L, pageable))
+                .thenReturn(new PageImpl<>(testCompanies));
         when(userRepository.findByUsername("testUser"))
                 .thenReturn(Optional.of(testUser));
 
-        var result = companyService.getAllCompanies();
-        assertEquals(testCompanies.size(), result.size());
+        var result = companyService.getAllCompanies(pageable);
+        assertEquals(testCompanies.size(), result.getContent().size());
 
-        verify(companyRepository, times(1)).findAllByUserId(testUser.getId());
+        verify(companyRepository, times(1)).findAllByUserId(testUser.getId(), pageable);
     }
 
     @Test

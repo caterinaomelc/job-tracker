@@ -2,9 +2,9 @@ package com.jobtracker.application.service;
 
 import com.jobtracker.application.model.request.CompanyRequest;
 import com.jobtracker.application.model.response.CompanyResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import java.util.List;
-import java.util.Optional;
 
 public interface CompanyService {
 
@@ -14,7 +14,8 @@ public interface CompanyService {
 
     void deleteCompany(Long id);
 
-    List<CompanyResponse> getAllCompanies();
+
+    Page<CompanyResponse> getAllCompanies(Pageable pageable);
 
     CompanyResponse getCompanyById(Long companyId);
 

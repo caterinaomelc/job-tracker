@@ -12,11 +12,12 @@ import com.jobtracker.application.repositories.CompanyRepository;
 import com.jobtracker.application.repositories.UserRepository;
 import com.jobtracker.application.service.CompanyService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import java.util.List;
-import java.util.stream.Collectors;
+
 
 @Service
 @RequiredArgsConstructor
@@ -30,9 +31,10 @@ public class CompanyServiceImpl implements CompanyService {
     public CompanyResponse addCompany(CompanyRequest request) {
 
         Company company = companyMapper.toEntity(request);
-        company.setUser(getCurrentUser());
+        User currentUser = getCurrentUser();
+        company.setUser(currentUser);
 
-        if (companyRepository.existsByNameAndUser(company.getName(), getCurrentUser())) {
+        if (companyRepository.existsByNameAndUser(company.getName(), currentUser)) {
             throw new CompanyAlreadyExists("Company already exists");
         }
 
@@ -72,12 +74,11 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
 
-    public List<CompanyResponse> getAllCompanies() {
+    public Page<CompanyResponse> getAllCompanies(Pageable pageable) {
 
-        return companyRepository.findAllByUserId(getCurrentUser().getId())
-                .stream()
-                .map(companyMapper::toResponse)
-                .collect(Collectors.toList());
+        return companyRepository
+                .findAllByUserId(getCurrentUser().getId(), pageable)
+                .map(companyMapper::toResponse);
     }
 
     public CompanyResponse getCompanyById(Long id) {
