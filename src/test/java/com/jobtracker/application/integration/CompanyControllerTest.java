@@ -162,7 +162,10 @@ public class CompanyControllerTest {
                         .header(HttpHeaders.AUTHORIZATION, currentJwt)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$").isArray());
+                .andExpect(MockMvcResultMatchers.jsonPath("$.content").isArray())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.totalElements").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.totalPages").exists());
+
     }
 
     @Test
