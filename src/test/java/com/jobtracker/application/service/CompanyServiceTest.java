@@ -1,6 +1,7 @@
 package com.jobtracker.application.service;
 
 import com.jobtracker.application.exception.InvalidDataException;
+import com.jobtracker.application.exception.NotFoundException;
 import com.jobtracker.application.mapper.CompanyMapper;
 import com.jobtracker.application.model.entity.Company;
 import com.jobtracker.application.model.entity.User;
@@ -109,7 +110,7 @@ public class CompanyServiceTest {
     void getCompanyById_ThrowsException_WhenCompanyDoesNotExist() {
         when(companyRepository.findById(2L)).thenReturn(Optional.empty());
 
-        assertThrows(InvalidDataException.class,  () -> companyService.getCompanyById(2L));
+        assertThrows(NotFoundException.class,  () -> companyService.getCompanyById(2L));
 
         verify(companyRepository, times(1)).findById(2L);
     }
@@ -131,7 +132,7 @@ public class CompanyServiceTest {
 
         when(companyRepository.findById(2L)).thenReturn(Optional.empty());
 
-        assertThrows(InvalidDataException.class, () -> companyService.deleteCompany(2L));
+        assertThrows(NotFoundException.class, () -> companyService.deleteCompany(2L));
     }
 
     @Test
