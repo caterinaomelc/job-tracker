@@ -6,11 +6,12 @@ import com.jobtracker.application.service.ApplicationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -27,8 +28,8 @@ public class ApplicationController {
     }
 
     @GetMapping("${end.points.applications}")
-    public ResponseEntity<List<ApplicationResponse>> getApplications() {
-        return ResponseEntity.ok(applicationService.getAllApplications());
+    public ResponseEntity<Page<ApplicationResponse>> getApplications(Pageable pageable) {
+        return ResponseEntity.ok(applicationService.getAllApplications(pageable));
     }
 
     @PutMapping("${end.points.companies.id.applications.id}")

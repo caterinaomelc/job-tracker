@@ -13,6 +13,8 @@ import com.jobtracker.application.repositories.CompanyRepository;
 import com.jobtracker.application.repositories.UserRepository;
 import com.jobtracker.application.service.ApplicationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -75,14 +77,10 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public List<ApplicationResponse> getAllApplications() {
+    public Page<ApplicationResponse> getAllApplications(Pageable pageable) {
         User user = getCurrentUser();
-        List<Company> companies = user.getCompanies();
 
-        return companies.stream()
-                .flatMap(company -> company.getApplications().stream())
-                .map(applicationMapper::toResponse)
-                .toList();
+        return applicationRepository.findAllByCompanyUserId(user.getId(), pageable).map(applicationMapper::toResponse);
     }
 
     private User getCurrentUser() {

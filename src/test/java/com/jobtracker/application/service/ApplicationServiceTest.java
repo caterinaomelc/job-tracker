@@ -1,6 +1,7 @@
 package com.jobtracker.application.service;
 
 import com.jobtracker.application.exception.InvalidDataException;
+import com.jobtracker.application.exception.NotFoundException;
 import com.jobtracker.application.mapper.ApplicationMapper;
 import com.jobtracker.application.model.entity.Application;
 import com.jobtracker.application.model.entity.Company;
@@ -17,6 +18,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -29,7 +33,6 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
 
 
 @ExtendWith(MockitoExtension.class)
@@ -108,7 +111,7 @@ public class ApplicationServiceTest {
     void addApplication_ThrowsException_CompanyDoesNotExist() {
         when(companyRepository.findById(2L)).thenReturn(Optional.empty());
 
-        assertThrows(InvalidDataException.class, () -> applicationService.addApplication(testApplicationRequest, 2L));
+        assertThrows(NotFoundException.class, () -> applicationService.addApplication(testApplicationRequest, 2L));
 
         verify(companyRepository, times(1)).findById(2L);
     }
@@ -135,24 +138,24 @@ public class ApplicationServiceTest {
     void updateApplication_ThrowsException_CompanyDoesNotExist() {
         when(companyRepository.findById(2L)).thenReturn(Optional.empty());
 
-        assertThrows(InvalidDataException.class, () -> applicationService.updateApplication(testApplicationRequest, 2L, 1L));
+        assertThrows(NotFoundException.class, () -> applicationService.updateApplication(testApplicationRequest, 2L, 1L));
 
         verify(companyRepository, times(1)).findById(2L);
     }
 
     @Test
-    void updateApplication_ThrowsException_ApplicationDoesNotExist(){
+    void updateApplication_ThrowsException_ApplicationDoesNotExist() {
         when(companyRepository.findById(1L)).thenReturn(Optional.of(testCompany));
         when(applicationRepository.findById(2L)).thenReturn(Optional.empty());
 
-        assertThrows(InvalidDataException.class, () -> applicationService.updateApplication(testApplicationRequest, 1L, 2L));
+        assertThrows(NotFoundException.class, () -> applicationService.updateApplication(testApplicationRequest, 1L, 2L));
 
         verify(companyRepository, times(1)).findById(1L);
         verify(applicationRepository, times(1)).findById(2L);
     }
 
     @Test
-    void updateApplication_ThrowsException_CompanyAndApplicationDoNotMatch(){
+    void updateApplication_ThrowsException_CompanyAndApplicationDoNotMatch() {
         Company anotherCompany = new Company();
         anotherCompany.setId(2L);
         when(companyRepository.findById(2L)).thenReturn(Optional.of(anotherCompany));
@@ -165,7 +168,7 @@ public class ApplicationServiceTest {
     }
 
     @Test
-    void deleteApplication(){
+    void deleteApplication() {
         when(companyRepository.findById(1L)).thenReturn(Optional.of(testCompany));
         when(applicationRepository.findById(1L)).thenReturn(Optional.of(testApplication));
 
@@ -180,17 +183,17 @@ public class ApplicationServiceTest {
     void deleteApplication_ThrowsException_CompanyDoesNotExist() {
         when(companyRepository.findById(2L)).thenReturn(Optional.empty());
 
-        assertThrows(InvalidDataException.class, () -> applicationService.deleteApplication(2L, 1L));
+        assertThrows(NotFoundException.class, () -> applicationService.deleteApplication(2L, 1L));
 
         verify(companyRepository, times(1)).findById(2L);
     }
 
     @Test
-    void deleteApplication_ThrowsException_ApplicationDoesNotExist(){
+    void deleteApplication_ThrowsException_ApplicationDoesNotExist() {
         when(companyRepository.findById(1L)).thenReturn(Optional.of(testCompany));
         when(applicationRepository.findById(2L)).thenReturn(Optional.empty());
 
-        assertThrows(InvalidDataException.class, () -> applicationService.deleteApplication(1L, 2L));
+        assertThrows(NotFoundException.class, () -> applicationService.deleteApplication(1L, 2L));
 
         verify(companyRepository, times(1)).findById(1L);
         verify(applicationRepository, times(1)).findById(2L);
@@ -198,15 +201,17 @@ public class ApplicationServiceTest {
 
     @Test
     void getAllApplications() {
-        testCompany.setApplications(List.of(testApplication));
+        Pageable pageable = Pageable.unpaged();
+
         when(userRepository.findByUsername("testUser")).thenReturn(Optional.of(testUser));
+        when(applicationRepository.findAllByCompanyUserId(testUser.getId(), pageable))
+                .thenReturn(new PageImpl<>(List.of(testApplication)));
         when(applicationMapper.toResponse(testApplication)).thenReturn(testApplicationResponse);
 
-        var result = applicationService.getAllApplications();
+        Page<ApplicationResponse> result = applicationService.getAllApplications(pageable);
 
-        assertEquals(List.of(testApplicationResponse), result);
-
+        assertEquals(1, result.getContent().size());
+        assertEquals(testApplicationResponse, result.getContent().get(0));
         verify(applicationMapper, times(1)).toResponse(testApplication);
     }
-
 }
