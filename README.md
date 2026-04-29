@@ -68,18 +68,27 @@ Swagger UI: http://localhost:8080/swagger-ui/index.html
 
 ### Auth
 POST /auth/register - register a new user
+
 POST /auth/login - authenticate and get JWT token
 
 ### Companies
 GET /companies - get all companies
+
 GET /companies/{id} - get company by id
+
 POST /companies - create a company
+
 PUT /companies/{id} - update a company
+
 DELETE /companies/{id} - delete a company
 
 ### Applications
 GET /applications - get all applications
+
 GET /companies/{companyId}/applications - get applications by company
+
 POST /companies/{companyId}/applications - add application
+
 PUT /companies/{companyId}/applications/{id} - update application
+
 DELETE /companies/{companyId}/applications/{id} - delete application
