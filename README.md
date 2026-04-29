@@ -56,8 +56,8 @@ with GlobalExceptionHandler returning structured HTTP responses.
 Requirements: Docker Desktop
 
 ```
-git clone <your-repo-url>
-cd job-application-tracker
+git clone https://github.com/caterinaomelc/job-tracker.git
+cd job-tracker
 docker-compose up --build -d
 ```
 
