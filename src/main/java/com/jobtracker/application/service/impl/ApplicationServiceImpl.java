@@ -6,6 +6,7 @@ import com.jobtracker.application.mapper.ApplicationMapper;
 import com.jobtracker.application.model.entity.Application;
 import com.jobtracker.application.model.entity.Company;
 import com.jobtracker.application.model.entity.User;
+import com.jobtracker.application.model.enums.Status;
 import com.jobtracker.application.model.request.ApplicationRequest;
 import com.jobtracker.application.model.response.ApplicationResponse;
 import com.jobtracker.application.repositories.ApplicationRepository;
@@ -54,6 +55,11 @@ public class ApplicationServiceImpl implements ApplicationService {
         if (!application.getCompany().getId().equals(companyId)) {
             throw new InvalidDataException("Application does not belong to this company");
         }
+
+        if(!application.getStatus().canTransitionTo(Status.valueOf(request.status()))){
+            throw new InvalidDataException("Application Status can't be transitioned to " + request.status());
+        }
+
         applicationMapper.updateApplication(request, application);
         applicationRepository.save(application);
 
