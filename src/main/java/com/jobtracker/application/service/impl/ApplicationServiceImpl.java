@@ -83,11 +83,16 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public Page<ApplicationResponse> getAllApplications(Pageable pageable) {
+    public Page<ApplicationResponse> getAllApplications(Pageable pageable, Status status) {
         User user = getCurrentUser();
-
-        return applicationRepository.findAllByCompanyUserId(user.getId(), pageable).map(applicationMapper::toResponse);
+        if (status == null) {
+            return applicationRepository.findAllByCompanyUserId(user.getId(), pageable)
+                    .map(applicationMapper::toResponse);
+        }
+        return applicationRepository.findAllByCompanyUserIdAndStatus(user.getId(), pageable, status)
+                .map(applicationMapper::toResponse);
     }
+
 
     private User getCurrentUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

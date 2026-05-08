@@ -24,7 +24,7 @@ public class AuthController {
         return ResponseEntity.ok(token);
     }
 
-    //register
+
     @PostMapping("${end.points.register}")
     public ResponseEntity<String> register(@RequestBody @Valid RegisterRequest request) {
         log.trace("register request:{}", request);

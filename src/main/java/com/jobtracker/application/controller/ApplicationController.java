@@ -1,5 +1,6 @@
 package com.jobtracker.application.controller;
 
+import com.jobtracker.application.model.enums.Status;
 import com.jobtracker.application.model.request.ApplicationRequest;
 import com.jobtracker.application.model.response.ApplicationResponse;
 import com.jobtracker.application.service.ApplicationService;
@@ -28,8 +29,10 @@ public class ApplicationController {
     }
 
     @GetMapping("${end.points.applications}")
-    public ResponseEntity<Page<ApplicationResponse>> getApplications(Pageable pageable) {
-        return ResponseEntity.ok(applicationService.getAllApplications(pageable));
+    public ResponseEntity<Page<ApplicationResponse>> getApplications(Pageable pageable,
+                                                                     @RequestParam(name = "status", required = false) Status status) {
+        return ResponseEntity.ok(applicationService.getAllApplications(pageable, status));
+
     }
 
     @PutMapping("${end.points.companies.id.applications.id}")

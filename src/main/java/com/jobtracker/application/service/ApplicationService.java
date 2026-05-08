@@ -1,5 +1,6 @@
 package com.jobtracker.application.service;
 
+import com.jobtracker.application.model.enums.Status;
 import com.jobtracker.application.model.request.ApplicationRequest;
 import com.jobtracker.application.model.response.ApplicationResponse;
 import org.springframework.data.domain.Page;
@@ -14,5 +15,5 @@ public interface ApplicationService {
 
     void deleteApplication(Long companyId, Long applicationId);
 
-    Page<ApplicationResponse> getAllApplications(Pageable pageable);
+    Page<ApplicationResponse> getAllApplications(Pageable pageable, Status status);
 }
