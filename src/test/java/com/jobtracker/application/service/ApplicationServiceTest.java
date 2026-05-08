@@ -6,6 +6,7 @@ import com.jobtracker.application.mapper.ApplicationMapper;
 import com.jobtracker.application.model.entity.Application;
 import com.jobtracker.application.model.entity.Company;
 import com.jobtracker.application.model.entity.User;
+import com.jobtracker.application.model.enums.Status;
 import com.jobtracker.application.model.request.ApplicationRequest;
 import com.jobtracker.application.model.response.ApplicationResponse;
 import com.jobtracker.application.repositories.ApplicationRepository;
@@ -202,13 +203,31 @@ public class ApplicationServiceTest {
     @Test
     void getAllApplications() {
         Pageable pageable = Pageable.unpaged();
+        Status status = null;
 
         when(userRepository.findByUsername("testUser")).thenReturn(Optional.of(testUser));
         when(applicationRepository.findAllByCompanyUserId(testUser.getId(), pageable))
                 .thenReturn(new PageImpl<>(List.of(testApplication)));
         when(applicationMapper.toResponse(testApplication)).thenReturn(testApplicationResponse);
 
-        Page<ApplicationResponse> result = applicationService.getAllApplications(pageable);
+        Page<ApplicationResponse> result = applicationService.getAllApplications(pageable, status);
+
+        assertEquals(1, result.getContent().size());
+        assertEquals(testApplicationResponse, result.getContent().get(0));
+        verify(applicationMapper, times(1)).toResponse(testApplication);
+    }
+
+    @Test
+    void getAllApplicationsWithStatusFiltering() {
+        Pageable pageable = Pageable.unpaged();
+        Status status = Status.IN_PROGRESS;
+
+        when(userRepository.findByUsername("testUser")).thenReturn(Optional.of(testUser));
+        when(applicationRepository.findAllByCompanyUserIdAndStatus(testUser.getId(), pageable, status))
+                .thenReturn(new PageImpl<>(List.of(testApplication)));
+        when(applicationMapper.toResponse(testApplication)).thenReturn(testApplicationResponse);
+
+        Page<ApplicationResponse> result = applicationService.getAllApplications(pageable, status);
 
         assertEquals(1, result.getContent().size());
         assertEquals(testApplicationResponse, result.getContent().get(0));
