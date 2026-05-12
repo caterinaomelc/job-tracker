@@ -18,6 +18,7 @@ Flyway, MapStruct, Docker, Swagger/OpenAPI
 - Input validation with @Valid
 - Unit and integration tests (Mockito, MockMvc)
 - Database migrations with Flyway
+- Logging
 
 ## Security
 - JWT-based stateless authentication
