@@ -56,7 +56,14 @@ public class ApplicationServiceImpl implements ApplicationService {
             throw new InvalidDataException("Application does not belong to this company");
         }
 
-        if(!application.getStatus().canTransitionTo(Status.valueOf(request.status()))){
+        Status newStatus;
+        try {
+            newStatus = Status.valueOf(request.status());
+        } catch (IllegalArgumentException e) {
+            throw new InvalidDataException("Invalid status: " + request.status());
+        }
+
+        if (!application.getStatus().canTransitionTo(newStatus)) {
             throw new InvalidDataException("Application Status can't be transitioned to " + request.status());
         }
 
